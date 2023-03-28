@@ -8,9 +8,9 @@ import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        // fazer uma conexao HTTP e buscar os top 250 filmes
+        // fazer uma conexão HTTP e buscar os top 250 séries
 
-        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
+        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopTVs.json";
         URI endereco = URI.create(url);
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder(endereco).GET().build();
@@ -25,7 +25,8 @@ public class App {
 
 
         // exibir e manipular os dados
-        for (Map<String,String> filme : listaDeFilmes) {
+        for (int i = 0; i < 3; i++) {
+        	Map<String, String> filme = listaDeFilmes.get(i); 
             System.out.println(filme.get("title"));
             System.out.println(filme.get("image"));
             System.out.println(filme.get("imDbRating"));
