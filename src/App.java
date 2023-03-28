@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
@@ -14,6 +15,7 @@ public class App {
         // fazer uma conexão HTTP e buscar os 250 melhores filmes
 
         String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
+        // String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularMovies.json";
         URI endereco = URI.create(url);
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder(endereco).GET().build();
@@ -37,14 +39,25 @@ public class App {
         	
         	String urlImagem = filme.get("image");
         	String titulo = filme.get("title");
+        	double classificacao = Double.parseDouble(filme.get("imDbRating"));
         	
+        	String textoFigurinha;
+        	InputStream imagemSobreposicao;
+        	if(classificacao >= 8.0) {
+        		textoFigurinha = "MÍDIA";
+        		imagemSobreposicao = new FileInputStream(new File("sobreposicao/positivo.jpg"));
+        	}
+        	else {
+        		textoFigurinha = "CANSADO";
+        		imagemSobreposicao = new FileInputStream(new File("sobreposicao/negativo.jpg"));
+        	}
         	
         	
         	InputStream inputStream = new URL(urlImagem).openStream();
         	String nomeArquivo = "figurinhas/" + titulo + ".png";
         	
         	
-        	geradora.cria(inputStream, nomeArquivo);
+        	geradora.cria(inputStream, nomeArquivo, textoFigurinha, imagemSobreposicao);
         	
             System.out.println(titulo);
             

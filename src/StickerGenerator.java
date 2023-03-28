@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 public class StickerGenerator {
 	
-	public void cria(InputStream inputStream, String nomeArquivo) throws Exception {
+	public void cria(InputStream inputStream, String nomeArquivo, String texto, InputStream inputStreamSobreposicao) throws Exception {
 		
 		// leitura da imagem
 		// InputStream inputStream = new FileInputStream(new File("entrada/filme.jpg"));
@@ -33,13 +33,17 @@ public class StickerGenerator {
 		Graphics2D graphics = (Graphics2D) novaImagem.getGraphics();
 		graphics.drawImage(imagemOriginal, 0, 0, null);
 		
+		BufferedImage imagemSobreposicao = ImageIO.read(inputStreamSobreposicao);
+		int posicaoImagemSobreposicaoY = novaAltura - imagemSobreposicao.getHeight();
+		graphics.drawImage(imagemSobreposicao, 0, posicaoImagemSobreposicaoY, null);
+		
 		// configurar a fonte
-		var fonte = new Font("Impact", Font.BOLD, 65);
+		var fonte = new Font("Impact", Font.BOLD, 100);
 		graphics.setColor(Color.CYAN);
 		graphics.setFont(fonte);
 		
 		// escrever uma frase na nova imagem
-		String texto = "VOANDO ALTO";
+		
 		FontMetrics fontMetrics = graphics.getFontMetrics();
 		Rectangle2D retangulo = fontMetrics.getStringBounds(texto, graphics);
 		int larguraTexto = (int) retangulo.getWidth();
