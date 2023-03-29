@@ -1,69 +1,61 @@
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
-import java.util.Map;
+import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        // fazer uma conexão HTTP e buscar os 250 melhores filmes
-
-        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
-        // String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularMovies.json";
-        URI endereco = URI.create(url);
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder(endereco).GET().build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());  
-        String body = response.body();
-        
-
-        // pegar/extrair só os dados que interessam (titulo, poster, classificacao)
-        JsonParser parser = new JsonParser();
-        List<Map<String, String>> listaDeFilmes = parser.parse(body);
-        
-
-
-        // exibir e manipular os dados
+    	Scanner sc = new Scanner(System.in);
+    	List<Conteudo> conteudos = null;
+    	
+    	System.out.print("Digite 1 para imDb e 2 para Nasa: ");
+    	int n = sc.nextInt();
+    	
+    	if(n == 1) {
+    		
+    		String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
+    		
+    		var http = new ClienteHttp();
+            String json = http.buscaDados(url);
+            
+            ExtratorDeConteudoIMDB extrator = new ExtratorDeConteudoIMDB();
+            conteudos = extrator.extraiConteudos(json);
+    	}
+    	
+    	if(n == 2) {
+    		
+    		String url = "https://api.nasa.gov/planetary/apod?api_key=kQfl6YrUpKGgpeT0yUGIDsEVib9FS9S0WPvCxuAO&start"
+    				+ "_date=2022-06-12&end_date=2022-06-14";
+    		
+    		var http = new ClienteHttp();
+            String json = http.buscaDados(url);
+            
+            ExtratorDeConteudoNasa extrator = new ExtratorDeConteudoNasa();
+            conteudos = extrator.extraiConteudos(json);
+    	}
+    	
         var geradora = new StickerGenerator();
         var diretorio = new File("figurinhas/");
     	diretorio.mkdir();
+    	
         for (int i = 0; i < 3; i++) {
         	
-        	var filme = listaDeFilmes.get(i);
-        	
-        	String urlImagem = filme.get("image");
-        	String titulo = filme.get("title");
-        	double classificacao = Double.parseDouble(filme.get("imDbRating"));
-        	
-        	String textoFigurinha;
-        	InputStream imagemSobreposicao;
-        	if(classificacao >= 8.0) {
-        		textoFigurinha = "MÍDIA";
-        		imagemSobreposicao = new FileInputStream(new File("sobreposicao/positivo.jpg"));
-        	}
-        	else {
-        		textoFigurinha = "CANSADO";
-        		imagemSobreposicao = new FileInputStream(new File("sobreposicao/negativo.jpg"));
-        	}
+        	Conteudo conteudo = conteudos.get(i);
         	
         	
-        	InputStream inputStream = new URL(urlImagem).openStream();
-        	String nomeArquivo = "figurinhas/" + titulo + ".png";
+        	
+        	InputStream inputStream = new URL(conteudo.getUrlImagem()).openStream();
+        	String nomeArquivo = "figurinhas/" + conteudo.getTitulo() + ".png";
+        	
+        	geradora.cria(inputStream, nomeArquivo);
         	
         	
-        	geradora.cria(inputStream, nomeArquivo, textoFigurinha, imagemSobreposicao);
-        	
-            System.out.println(titulo);
+            System.out.println(conteudo.getTitulo());
             
             System.out.println("\n");
         }
         
-
+        sc.close();
     }
 }
