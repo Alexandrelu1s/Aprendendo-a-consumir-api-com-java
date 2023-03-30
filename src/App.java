@@ -2,42 +2,24 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws Exception {
-    	Scanner sc = new Scanner(System.in);
-    	List<Conteudo> conteudos = null;
+ 
+    	API api = API.NASA;
     	
-    	System.out.print("Digite 1 para imDb e 2 para Nasa: ");
-    	int n = sc.nextInt();
+    	String url = api.getUrl();
+    	ExtratorDeConteudo extrator = api.getExtrator();
     	
-    	if(n == 1) {
-    		
-    		String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
-    		
-    		var http = new ClienteHttp();
-            String json = http.buscaDados(url);
-            
-            ExtratorDeConteudoIMDB extrator = new ExtratorDeConteudoIMDB();
-            conteudos = extrator.extraiConteudos(json);
-    	}
+    	var http = new ClienteHttp();
+    	String json = http.buscaDados(url);
     	
-    	if(n == 2) {
-    		
-    		String url = "https://api.nasa.gov/planetary/apod?api_key=kQfl6YrUpKGgpeT0yUGIDsEVib9FS9S0WPvCxuAO&start"
-    				+ "_date=2022-06-12&end_date=2022-06-14";
-    		
-    		var http = new ClienteHttp();
-            String json = http.buscaDados(url);
-            
-            ExtratorDeConteudoNasa extrator = new ExtratorDeConteudoNasa();
-            conteudos = extrator.extraiConteudos(json);
-    	}
+    	List<Conteudo> conteudos = extrator.extraiConteudos(json);
     	
         var geradora = new StickerGenerator();
         var diretorio = new File("figurinhas/");
     	diretorio.mkdir();
+    	
     	
         for (int i = 0; i < 3; i++) {
         	
@@ -56,6 +38,5 @@ public class App {
             System.out.println("\n");
         }
         
-        sc.close();
     }
 }
