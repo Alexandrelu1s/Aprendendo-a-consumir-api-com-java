@@ -14,8 +14,8 @@ public class App {
     	
     	if(n == 1) {
     		
-    		String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
-    		
+    		//String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
+    		String url = "https://raw.githubusercontenterrada.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
     		var http = new ClienteHttp();
             String json = http.buscaDados(url);
             
