@@ -14,8 +14,8 @@ public class App {
     	
     	if(n == 1) {
     		
-    		//String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
-    		String url = "https://raw.githubusercontenterrada.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
+    		String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
+    		
     		var http = new ClienteHttp();
             String json = http.buscaDados(url);
             
@@ -45,13 +45,13 @@ public class App {
         	
         	
         	
-        	InputStream inputStream = new URL(conteudo.urlImagem()).openStream();
-        	String nomeArquivo = "figurinhas/" + conteudo.titulo() + ".png";
+        	InputStream inputStream = new URL(conteudo.getUrlImagem()).openStream();
+        	String nomeArquivo = "figurinhas/" + conteudo.getTitulo() + ".png";
         	
         	geradora.cria(inputStream, nomeArquivo);
         	
         	
-            System.out.println(conteudo.titulo());
+            System.out.println(conteudo.getTitulo());
             
             System.out.println("\n");
         }
