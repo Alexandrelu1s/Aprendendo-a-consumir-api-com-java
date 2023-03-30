@@ -45,13 +45,13 @@ public class App {
         	
         	
         	
-        	InputStream inputStream = new URL(conteudo.getUrlImagem()).openStream();
-        	String nomeArquivo = "figurinhas/" + conteudo.getTitulo() + ".png";
+        	InputStream inputStream = new URL(conteudo.urlImagem()).openStream();
+        	String nomeArquivo = "figurinhas/" + conteudo.titulo() + ".png";
         	
         	geradora.cria(inputStream, nomeArquivo);
         	
         	
-            System.out.println(conteudo.getTitulo());
+            System.out.println(conteudo.titulo());
             
             System.out.println("\n");
         }
